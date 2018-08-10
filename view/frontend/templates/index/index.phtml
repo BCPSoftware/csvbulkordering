@@ -1,0 +1,42 @@
+<h2><?php echo $block->escapeHtml(__('Order Upload')); ?></h2>
+<p><?php echo $block->escapeHtml(__('Bulk ordering mode simple! Download our sample template below, fill in the order
+    details and upload by selecting the file or drag and dropping into the box below. All your products will be
+    automatically added to your cart. Easy!')); ?>
+</p>
+<div class="csvupload">
+    <div id="notifications" class="collapsibleContainer"></div>
+
+    <div id="loader" class="loader"></div>
+
+    <form action="/orderupload/index/fileupload" id="myform" class="">
+        <div id="dropbox" class="dropbox">
+            <span>
+                <?php echo $block->escapeHtml(__('Drag and drop your CSV file or just click here to choose')); ?>
+            </span>
+        </div>
+        <input name="file" type="file" id="file" class="file" accept=".csv"/>
+    </form>
+
+</div>
+<div class="btn-group">
+    <a onclick="jQuery('#file').click();
+        jQuery(this).text('<?php echo $block->escapeHtml(__('Upload another Order')) ?>')"
+       class="button action primary"><?php echo $block->escapeHtml(__('Upload Order')); ?></a>
+    <?php if ($block->getConfig('oporteo/general/plof')) : ?>
+        <a href="/orderupload/index/getplof" class="button action primary">
+            <?php echo $block->escapeHtml(__('Get PLOF File')); ?>
+        </a>
+    <?php endif; ?>
+    <a href="/orderupload/index/gettemplate" class="button action primary">
+        <?php echo $block->escapeHtml(__('Get Template File')); ?>
+    </a>
+    <a href="/orderupload/index/emptycart" id="emptycart" class="button action primary emptycart
+        <?php echo $block->escapeHtml(($block->isEmptyCart()) ? ' btn-no-display' : ''); ?>">
+        <?php echo $block->escapeHtml(__('Empty Cart')); ?>
+    </a>
+    <a href="<?php echo $block->escapeHtml($block->getBaseUrl()); ?>checkout/cart/" id="checkout_btn"
+       class="button action primary checkout_btn
+        <?php echo $block->escapeHtml(($block->isEmptyCart()) ? ' btn-no-display' : ''); ?>">
+        <?php echo $block->escapeHtml(__('Checkout')); ?>
+    </a>
+</div>

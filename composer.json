@@ -1,0 +1,23 @@
+{
+    "name": "oporteo/module-csvorderupload",
+    "description": "",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "authors": [
+        {
+            "email": "info@whidegroup.com",
+            "name": "Whidegroup"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Oporteo\\Csvorderupload\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
