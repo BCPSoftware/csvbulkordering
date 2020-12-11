@@ -16,7 +16,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="plof" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-                    <label>PLOF Download</label>
+                    <label>Price List Download</label>
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                 </field>

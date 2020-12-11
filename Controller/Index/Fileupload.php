@@ -1,83 +1,190 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Oporteo\Csvorderupload\Controller\Index;
 
-class Fileupload extends \Magento\Framework\App\Action\Action
-{
+use Exception;
+use Magento\Checkout\Model\Cart;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\File\Csv;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Filesystem\Driver\File;
+use Magento\Framework\Serialize\SerializerInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Magento\MediaStorage\Model\File\UploaderFactory;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
+use Oporteo\Csvorderupload\Helper\Data as DataHelper;
 
+/**
+ * Class Fileupload
+ */
+class Fileupload extends Action implements HttpPostActionInterface
+{
+    /**
+     * @var Csv
+     */
+    private $csv;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var File
+     */
+    private $file;
+
+    /**
+     * @var UploaderFactory
+     */
+    private $fileUploaderFactory;
+
+    /**
+     * @var DataHelper
+     */
+    private $dataHelper;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * @var QuoteResourceModel
+     */
+    private $quoteResourceModel;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var GetProductSalableQtyInterface
+     */
+    private $productSalableQty;
+
+    /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
+     * @var Cart
+     */
+    private $cart;
+
+    /**
+     * Fileupload constructor.
+     *
+     * @param Context $context
+     * @param Filesystem $filesystem
+     * @param File $file
+     * @param UploaderFactory $fileUploaderFactory
+     * @param Csv $csv
+     * @param Session $session
+     * @param GetProductSalableQtyInterface $productSalableQty
+     * @param DataHelper $dataHelper
+     * @param QuoteResourceModel $quoteResourceModel
+     * @param SerializerInterface $serializer
+     * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param Cart $cart
+     */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\Filesystem $filesystem,
-        \Magento\Framework\Filesystem\Driver\File $file,
-        \Magento\MediaStorage\Model\File\UploaderFactory $fileUploaderFactory,
-        \Magento\Framework\File\Csv $csv,
-        \Magento\Framework\Data\Form\FormKey $formKey,
-        \Magento\Checkout\Model\Cart $cart,
-        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        \Magento\Catalog\Model\Product $product,
-        \Magento\CatalogInventory\Api\StockStateInterface $stockItem,
-        \Oporteo\Csvorderupload\Helper\Data $helper
+        Context $context,
+        Filesystem $filesystem,
+        File $file,
+        UploaderFactory $fileUploaderFactory,
+        Csv $csv,
+        Session $session,
+        GetProductSalableQtyInterface $productSalableQty,
+        DataHelper $dataHelper,
+        QuoteResourceModel $quoteResourceModel,
+        SerializerInterface $serializer,
+        DefaultStockProviderInterface $defaultStockProvider,
+        Cart $cart
     ) {
-        $this->filesystem   = $filesystem;
-        $this->_file        = $file;
-        $this->_fileUploaderFactory = $fileUploaderFactory;
-        $this->csv          = $csv;
-        $this->formKey      = $formKey;
-        $this->cart         = $cart;
-        $this->_productCollectionFactory = $productCollectionFactory;
-        $this->product      = $product;
-        $this->stockItem    = $stockItem;
-        $this->helper       = $helper;
+        $this->filesystem = $filesystem;
+        $this->file = $file;
+        $this->fileUploaderFactory = $fileUploaderFactory;
+        $this->csv = $csv;
+        $this->session = $session;
+        $this->dataHelper = $dataHelper;
+        $this->quoteResourceModel = $quoteResourceModel;
+        $this->serializer = $serializer;
+        $this->productSalableQty = $productSalableQty;
+        $this->defaultStockProvider = $defaultStockProvider;
+        $this->cart = $cart;
+
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     *
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
-        $log    = [];
-        $result = [];
+        $log = [];
 
         try {
-            $mediaDirectory = $this->filesystem
-                ->getDirectoryWrite(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
-            $target     = $mediaDirectory->getAbsolutePath('csv_upload/');
-            $uploader   = $this->_fileUploaderFactory->create(['fileId' => 'file']);
-            /** Allowed extension types */
+            $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+            $target = $mediaDirectory->getAbsolutePath('csv_upload/');
+            $uploader = $this->fileUploaderFactory->create(['fileId' => 'file']);
             $uploader->setAllowedExtensions(['csv']);
-            /** rename file name if already exists */
             $uploader->setAllowRenameFiles(true);
-            $result     = $uploader->save($target);
-        } catch (\Exception $e) {
-            $log['messages']['csv']['fail'][] = 'Error uploading file: '.$e->getMessage().'';
+            $result = $uploader->save($target);
+        } catch (Exception $e) {
+            $log['messages']['csv']['fail'][] = 'Error uploading file: ' . $e->getMessage();
+
+            return $this->getResponse()->representJson($this->serializer->serialize($log));
         }
 
         if ($result['file']) {
             $target = $result['path'].$result['file'];
-            $templateLink   = $this->_url->getUrl('orderupload/index/gettemplate', [
-                '_current' => true,
-                '_use_rewrite' => true]);
-            $msgLink        = '<a href="'.sprintf($templateLink).'">'.__('Click here to download template.').'</a>';
+            $templateLink   = $this->_url->getUrl(
+                'orderupload/index/gettemplate',
+                [
+                    '_current' => true,
+                    '_use_rewrite' => true
+                ]
+            );
+            $msgLink = '<a href="'. sprintf($templateLink) . '">' . __('Click here to download template.') . '</a>';
 
-            if (!$this->_file->isExists($target)) {
+            if (!$this->file->isExists($target)) {
                 $log['messages']['csv']['fail'][] = 'Invalid file upload attempt.';
-                throw new \Magento\Framework\Exception\LocalizedException(__('Invalid file upload attempt.'));
+
+                return $this->getResponse()->representJson($this->serializer->serialize($log));
             }
 
-            $csvData    = $this->csv->getData($target);
-            $headers    = array_map('strtolower', $csvData[0]);
-
-            $columnsCount   = count($headers);
+            $csvData = $this->csv->getData($target);
+            $headers = array_map('strtolower', $csvData[0]);
+            $columnsCount = count($headers);
 
             foreach ($csvData as $csvRowIndex => $csvRowData) {
-                $rowDataCount   = $this->helper->getArrElCount($csvRowData);
+                $rowDataCount = $this->dataHelper->getArrElCount($csvRowData);
+
                 if ($rowDataCount < $columnsCount) {
                     $log['messages']['csv']['fail'][] = 'Unable to read line '. ($csvRowIndex + 1) .'. Skipped. Please
-                    check formatting is correct by comparing your import to the template file. '.$msgLink;
+                    check formatting is correct by comparing your import to the template file. ' . $msgLink;
                     unset($csvData[$csvRowIndex]);
                 }
             }
 
-            $skuIndex   = array_search('sku', $headers);
-            $qtyIndex   = array_search('qty', $headers);
+            $skuIndex = array_search('sku', $headers);
+            $qtyIndex = array_search('qty', $headers);
 
             if ($skuIndex === false || $qtyIndex === false) {
                 switch (true) {
@@ -95,25 +202,24 @@ class Fileupload extends \Magento\Framework\App\Action\Action
                         break;
                 }
 
-                return false;
+                return $this->getResponse()->representJson($this->serializer->serialize($log));
             }
 
-            $skuArr     = [];
-            $qtyArr     = [];
+            $skuArr = [];
+            $qtyArr = [];
 
             foreach ($csvData as $row => $data) {
                 if ($row > 0) {
-                    if ((int)($data[$qtyIndex]) > 0) {
+                    if ((int)$data[$qtyIndex] > 0) {
                         $skuArr[] = $data[$skuIndex];
-                        $qtyArr[] = (int)($data[$qtyIndex]);
+                        $qtyArr[] = (int)$data[$qtyIndex];
                     } else {
                         continue;
                     }
                 }
             }
 
-            // validate nonexistent SKU's
-            $skusArr    = $this->helper->getAllSkusArr();
+            $skusArr = $this->dataHelper->getAllSkusArr();
             $unSkuItems = array_diff($skuArr, $skusArr);
 
             foreach ($skuArr as $skuItemIndex => $skuItemValue) {
@@ -124,16 +230,16 @@ class Fileupload extends \Magento\Framework\App\Action\Action
             }
 
             if (!empty($unSkuItems)) {
-                $log['messages']['product']['fail'][] = 'There are '.count($unSkuItems).
-                    ' ('.implode(", ", $unSkuItems).') nonexistent SKUs in uploaded CSV file. They are ignored.';
+                $log['messages']['product']['fail'][] = 'There are ' . count($unSkuItems).
+                    ' (' . implode(", ", $unSkuItems) . ') nonexistent SKUs in uploaded CSV file. They are ignored.';
             }
 
-            // validate duplicated sku's
-            $duplicatesResult   = $this->helper->getKeysForDuplicateValues($skuArr);
+            $duplicatesResult = $this->dataHelper->getKeysForDuplicateValues($skuArr);
+
             if (!empty($duplicatesResult)) {
-                $log['messages']['product']['fail'][] = 'There are '.count($duplicatesResult).'
+                $log['messages']['product']['fail'][] = 'There are ' . count($duplicatesResult) . '
                 duplicated SKUs in uploaded CSV file. Duplicates are removed except very first entries.';
-                // remove duplicates except first entries
+
                 foreach ($duplicatesResult as $sku => $duplicates) {
                     foreach ($duplicates as $dupItem) {
                         unset($skuArr[$dupItem]);
@@ -142,37 +248,33 @@ class Fileupload extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            // remove file from server
-            $this->_file->deleteFile($target);
-
+            $this->file->deleteFile($target);
             $importResult = ['skuArr' => $skuArr, 'qtyArr' => $qtyArr];
-
             $log['messages']['csv']['ok'][] = 'Successfully read CSV file.';
 
             if (!empty($skuArr = $importResult['skuArr']) && !empty($qtyArr = $importResult['qtyArr'])) {
-                $collectionToAdd    = $this->helper->getProductCollectionBySku($skuArr);
+                $collectionToAdd = $this->dataHelper->getProductCollectionBySku($skuArr);
                 $qtys = array_combine($skuArr, $qtyArr);
+                $quote = $this->session->getQuote();
+
                 if (!empty($collectionToAdd)) {
-                    $formKey = $this->formKey->getFormKey();
 
                     foreach ($collectionToAdd as $product) {
-                        $stockQty   = $this->stockItem->getStockQty(
-                            $product->getId(),
-                            $product->getStore()->getWebsiteId()
+                        $stockQty = $this->productSalableQty->execute(
+                            $product->getSku(),
+                            $this->defaultStockProvider->getId()
                         );
-                        $qtyToAdd   = ($qtys[$product->getSku()] > $stockQty) ? $stockQty : $qtys[$product->getSku()];
+                        $qtyToAdd = ($qtys[$product->getSku()] > $stockQty) ? $stockQty : $qtys[$product->getSku()];
+
                         if ($stockQty < $qtys[$product->getSku()]) {
                             $log['messages']['product']['fail'][] = 'There are fewer products in stock. Only '.
                                 $qtyToAdd. ' pcs added.';
                         }
-                        $params = [
-                            'form_key'  => $formKey,
-                            'product'   => $product->getId(),
-                            'qty'       => $qtyToAdd
-                        ];
+
                         try {
-                            $this->cart->addProduct($product, $params);
-                        } catch (\Exception $e) {
+                            $item = $quote->addProduct($product, $qtyToAdd);
+                            $quote->addItem($item);
+                        } catch (Exception $e) {
                             $log['messages']['product']['fail'][] = 'Product "' . $product->getName() .
                                 '" failed to add to Cart with message: "' . $e->getMessage() . '"';
                         }
@@ -182,9 +284,8 @@ class Fileupload extends \Magento\Framework\App\Action\Action
                     }
 
                     $this->cart->save();
-                    $this->cart->getQuote()->setTotalsCollectedFlag(false)->collectTotals()->save();
+                    $totalItems = $quote->getItemsCount();
 
-                    $totalItems     = $this->cart->getQuote()->getItemsCount();
                     if ($totalItems) {
                         $log['cart_items_qty'] = $totalItems;
                     }
@@ -192,6 +293,6 @@ class Fileupload extends \Magento\Framework\App\Action\Action
             }
         }
 
-        return $this->getResponse()->setBody(json_encode($log));
+        return $this->getResponse()->representJson($this->serializer->serialize($log));
     }
 }

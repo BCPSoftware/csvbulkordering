@@ -53,7 +53,7 @@ class Getplof extends \Magento\Framework\App\Action\Action
             array_push($csvData, $row);
         }
 
-        $outputFile = "PLOF_". date('Ymd_His').".csv";
+        $outputFile = "Price_List_". date('Ymd_His').".csv";
         $outputDirectory = \Magento\Framework\App\Filesystem\DirectoryList::MEDIA;
         $filePath =  $this->directoryList->getPath($outputDirectory) . "/" . $outputFile;
         $this->csvWriter

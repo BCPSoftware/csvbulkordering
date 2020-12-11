@@ -1,0 +1,10 @@
+<?php
+/** @var Magento\Framework\View\Element\Template $block */
+?>
+
+<li class="csv-order-upload-link" data-label="Order Upload">
+    <a href="<?= $block->escapeUrl($block->getUrl('orderupload')) ?>"
+       title="<?= $block->escapeHtmlAttr(__('Order upload')) ?>">
+        <?= $block->escapeHtml(__('Order upload')) ?>
+    </a>
+</li>
