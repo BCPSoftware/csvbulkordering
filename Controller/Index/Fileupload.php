@@ -155,7 +155,7 @@ class Fileupload extends Action implements HttpPostActionInterface
         if ($result['file']) {
             $target = $result['path'].$result['file'];
             $templateLink   = $this->_url->getUrl(
-                'orderupload/index/gettemplate',
+                'orderupload/csv/template',
                 [
                     '_current' => true,
                     '_use_rewrite' => true
@@ -267,8 +267,11 @@ class Fileupload extends Action implements HttpPostActionInterface
                         $qtyToAdd = ($qtys[$product->getSku()] > $stockQty) ? $stockQty : $qtys[$product->getSku()];
 
                         if ($stockQty < $qtys[$product->getSku()]) {
-                            $log['messages']['product']['fail'][] = 'There are fewer products in stock. Only '.
-                                $qtyToAdd. ' pcs added.';
+                            $log['messages']['product']['fail'][] = sprintf(
+                                'SKU %s has insufficient stock. Only %s were added.',
+                                $product->getSku(),
+                                $qtyToAdd
+                            );
                         }
 
                         try {

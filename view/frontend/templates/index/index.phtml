@@ -28,12 +28,12 @@
         <?= $block->escapeHtml(__('Upload Order')) ?>
     </a>
     <?php if ($block->getConfig('oporteo/general/plof')) : ?>
-        <a href="<?= $block->escapeUrl($block->getUrl('orderupload/index/getplof')) ?>"
+        <a href="<?= $block->escapeUrl($block->getUrl('orderupload/csv/priceList')) ?>"
            class="button action primary">
             <?= $block->escapeHtml(__('Get Price List File')) ?>
         </a>
     <?php endif; ?>
-    <a href="<?= $block->escapeUrl($block->getUrl('orderupload/index/gettemplate')) ?>"
+    <a href="<?= $block->escapeUrl($block->getUrl('orderupload/csv/template')) ?>"
        class="button action primary">
         <?= $block->escapeHtml(__('Get Template File')) ?>
     </a>
