@@ -8,7 +8,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\FileSystemException;
@@ -31,9 +30,9 @@ abstract class AbstractCsv extends Action
     private const TYPE = 'filename';
 
     /**
-     * @var RawFactory
+     * @var string
      */
-    private $resultRawFactory;
+    private const OUTPUT_DIRECTORY = DirectoryList::MEDIA;
 
     /**
      * @var FileFactory
@@ -51,11 +50,6 @@ abstract class AbstractCsv extends Action
     private $directoryList;
 
     /**
-     * @var string
-     */
-    private $outputDirectory;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -64,7 +58,6 @@ abstract class AbstractCsv extends Action
      * AbstractCsv constructor.
      *
      * @param Context $context
-     * @param RawFactory $resultRawFactory
      * @param FileFactory $fileFactory
      * @param Csv $csvWriter
      * @param DirectoryList $directoryList
@@ -72,18 +65,15 @@ abstract class AbstractCsv extends Action
      */
     public function __construct(
         Context $context,
-        RawFactory $resultRawFactory,
         FileFactory $fileFactory,
         Csv $csvWriter,
         DirectoryList $directoryList,
         LoggerInterface $logger
     ) {
-        $this->resultRawFactory = $resultRawFactory;
         $this->fileFactory = $fileFactory;
         $this->csvWriter = $csvWriter;
         $this->directoryList = $directoryList;
         $this->logger = $logger;
-        $this->outputDirectory = DirectoryList::MEDIA;
 
         parent::__construct($context);
     }
@@ -97,9 +87,9 @@ abstract class AbstractCsv extends Action
             $outputFile = $this->getOutputFile();
             $filePath = $this->getFilePath($outputFile);
 
-            return $this->writer($filePath, $this->getContent())
-                ->createFile($outputFile)
-                ->getResultRaw();
+            $this->write($filePath, $this->getContent());
+
+            return $this->createFile($outputFile);
         } catch (Exception $exception) {
             $this->logger->critical($exception);
             $this->messageManager->addErrorMessage(__('An error has occurred'));
@@ -135,7 +125,7 @@ abstract class AbstractCsv extends Action
      */
     protected function getFilePath(string $outputFile): string
     {
-        return $this->directoryList->getPath($this->outputDirectory) . "/" . $outputFile;
+        return $this->directoryList->getPath(self::OUTPUT_DIRECTORY) . '/' . $outputFile;
     }
 
     /**
@@ -143,54 +133,39 @@ abstract class AbstractCsv extends Action
      *
      * @param string $outputFile
      *
-     * @return $this
+     * @return ResponseInterface
      *
      * @throws Exception
      */
-    protected function createFile(string $outputFile): AbstractCsv
+    protected function createFile(string $outputFile): ResponseInterface
     {
-
-        $this->fileFactory->create(
+        return $this->fileFactory->create(
             $outputFile,
             [
                 'type' => self::TYPE,
                 'value' => $outputFile,
                 'rm' => true,
             ],
-            $this->outputDirectory,
+            self::OUTPUT_DIRECTORY,
             self::CONTENT_TYPE
         );
-
-        return $this;
     }
 
     /**
-     * Writer csv file
+     * Write data to csv file
      *
      * @param string $filePath
      * @param array $csvData
      *
-     * @return $this
+     * @return void
      *
      * @throws FileSystemException
      */
-    protected function writer(string $filePath, array $csvData): AbstractCsv
+    protected function write(string $filePath, array $csvData): void
     {
         $this->csvWriter
             ->setEnclosure('"')
             ->setDelimiter(',')
             ->appendData($filePath, $csvData);
-
-        return $this;
-    }
-
-    /**
-     * Get result raw
-     *
-     * @return ResultInterface
-     */
-    protected function getResultRaw(): ResultInterface
-    {
-        return $this->resultRawFactory->create();
     }
 }

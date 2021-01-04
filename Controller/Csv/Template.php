@@ -10,13 +10,13 @@ namespace Oporteo\Csvorderupload\Controller\Csv;
 class Template extends AbstractCsv
 {
     /**
-     * @array
+     * @var array
      */
     private const CSV_HEAD = [
         [
             'Sku',
             'Qty',
-        ]
+        ],
     ];
 
     /**
@@ -32,6 +32,6 @@ class Template extends AbstractCsv
      */
     protected function getOutputFile(): string
     {
-        return sprintf("Template_%s.csv", date('Ymd_His'));
+        return sprintf('Template_%s.csv', date('Ymd_His'));
     }
 }

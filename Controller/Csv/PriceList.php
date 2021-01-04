@@ -8,7 +8,6 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
-use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Oporteo\Csvorderupload\Helper\Data as CsvOrderUploadHelper;
@@ -20,15 +19,15 @@ use Psr\Log\LoggerInterface;
 class PriceList extends AbstractCsv
 {
     /**
-     * @array
+     * @var array
      */
     private const CSV_HEAD = [
         [
             'Sku',
             'Name',
             'Price',
-            'Qty'
-        ]
+            'Qty',
+        ],
     ];
 
     /**
@@ -50,7 +49,6 @@ class PriceList extends AbstractCsv
      * PriceList constructor.
      *
      * @param Context $context
-     * @param RawFactory $resultRawFactory
      * @param FileFactory $fileFactory
      * @param Csv $csvWriter
      * @param DirectoryList $directoryList
@@ -61,7 +59,6 @@ class PriceList extends AbstractCsv
      */
     public function __construct(
         Context $context,
-        RawFactory $resultRawFactory,
         FileFactory $fileFactory,
         Csv $csvWriter,
         DirectoryList $directoryList,
@@ -74,7 +71,7 @@ class PriceList extends AbstractCsv
         $this->priceHelper = $priceHelper;
         $this->csvOrderUploadHelper = $csvOrderUploadHelper;
 
-        parent::__construct($context, $resultRawFactory, $fileFactory, $csvWriter, $directoryList, $logger);
+        parent::__construct($context, $fileFactory, $csvWriter, $directoryList, $logger);
     }
 
     /**
@@ -104,6 +101,6 @@ class PriceList extends AbstractCsv
      */
     protected function getOutputFile(): string
     {
-        return sprintf("Price_List_%s.csv", date('Ymd_His'));
+        return sprintf('Price_List_%s.csv', date('Ymd_His'));
     }
 }
