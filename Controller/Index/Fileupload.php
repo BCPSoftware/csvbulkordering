@@ -15,8 +15,7 @@ use Magento\Framework\File\Csv;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Driver\File;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Magento\MediaStorage\Model\File\UploaderFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
 use Oporteo\Csvorderupload\Helper\Data as DataHelper;
@@ -67,14 +66,9 @@ class Fileupload extends Action implements HttpPostActionInterface
     private $serializer;
 
     /**
-     * @var GetProductSalableQtyInterface
+     * @var GetStockProductQtysInterface
      */
-    private $productSalableQty;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
+    private $stockProductQtys;
 
     /**
      * @var Cart
@@ -90,11 +84,10 @@ class Fileupload extends Action implements HttpPostActionInterface
      * @param UploaderFactory $fileUploaderFactory
      * @param Csv $csv
      * @param Session $session
-     * @param GetProductSalableQtyInterface $productSalableQty
+     * @param GetStockProductQtysInterface $stockProductQtys
      * @param DataHelper $dataHelper
      * @param QuoteResourceModel $quoteResourceModel
      * @param SerializerInterface $serializer
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param Cart $cart
      */
     public function __construct(
@@ -104,11 +97,10 @@ class Fileupload extends Action implements HttpPostActionInterface
         UploaderFactory $fileUploaderFactory,
         Csv $csv,
         Session $session,
-        GetProductSalableQtyInterface $productSalableQty,
+        GetStockProductQtysInterface $stockProductQtys,
         DataHelper $dataHelper,
         QuoteResourceModel $quoteResourceModel,
         SerializerInterface $serializer,
-        DefaultStockProviderInterface $defaultStockProvider,
         Cart $cart
     ) {
         $this->filesystem = $filesystem;
@@ -119,8 +111,7 @@ class Fileupload extends Action implements HttpPostActionInterface
         $this->dataHelper = $dataHelper;
         $this->quoteResourceModel = $quoteResourceModel;
         $this->serializer = $serializer;
-        $this->productSalableQty = $productSalableQty;
-        $this->defaultStockProvider = $defaultStockProvider;
+        $this->stockProductQtys = $stockProductQtys;
         $this->cart = $cart;
 
         parent::__construct($context);
@@ -230,8 +221,8 @@ class Fileupload extends Action implements HttpPostActionInterface
             }
 
             if (!empty($unSkuItems)) {
-                $log['messages']['product']['fail'][] = 'There are ' . count($unSkuItems).
-                    ' (' . implode(", ", $unSkuItems) . ') nonexistent SKUs in uploaded CSV file. They are ignored.';
+                $log['messages']['product']['fail'][] = 'The following SKU\'s have not been imported from the CSV File '
+                    . count($unSkuItems) . ' (' . implode(", ", $unSkuItems) . ').';
             }
 
             $duplicatesResult = $this->dataHelper->getKeysForDuplicateValues($skuArr);
@@ -256,22 +247,25 @@ class Fileupload extends Action implements HttpPostActionInterface
                 $collectionToAdd = $this->dataHelper->getProductCollectionBySku($skuArr);
                 $qtys = array_combine($skuArr, $qtyArr);
                 $quote = $this->session->getQuote();
+                $stockQtys = $this->stockProductQtys->execute($skuArr);
 
                 if (!empty($collectionToAdd)) {
 
                     foreach ($collectionToAdd as $product) {
-                        $stockQty = $this->productSalableQty->execute(
-                            $product->getSku(),
-                            $this->defaultStockProvider->getId()
-                        );
-                        $qtyToAdd = ($qtys[$product->getSku()] > $stockQty) ? $stockQty : $qtys[$product->getSku()];
+                        $qtyToAdd = ($qtys[$product->getSku()] > $stockQtys[$product->getSku()])
+                            ? $stockQtys[$product->getSku()]
+                            : $qtys[$product->getSku()];
 
-                        if ($stockQty < $qtys[$product->getSku()]) {
+                        if ($stockQtys[$product->getSku()] < $qtys[$product->getSku()]) {
                             $log['messages']['product']['fail'][] = sprintf(
                                 'SKU %s has insufficient stock. Only %s were added.',
                                 $product->getSku(),
                                 $qtyToAdd
                             );
+                        }
+
+                        if ($qtyToAdd === 0) {
+                            continue;
                         }
 
                         try {
