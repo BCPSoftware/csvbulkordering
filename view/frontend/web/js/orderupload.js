@@ -108,6 +108,7 @@ require([
     function getProductMsg(messages)
     {
         var result = '';
+        console.log(messages);
         if (messages.length != 0) {
             $j.each(messages, function (status, value) {
                 switch (status) {
@@ -119,7 +120,7 @@ require([
                         result += '</ul></div>';
                         break;
                     case 'fail':
-                        result += '<div class="collapsibleTab orderupload-msg'+' '+ status +'" data-role="collapsible"><div data-role="trigger"><span>Unable to add '+ value.length +' SKUs to basket.</span></div></div><div class="collapsibleContent msg-content'+' '+ status +'" data-role="content"><ul>';
+                        result += '<div class="collapsibleTab orderupload-msg'+' '+ status +'" data-role="collapsible"><div data-role="trigger"><span>Unable to add '+ messages.qty +' SKUs to basket.</span></div></div><div class="collapsibleContent msg-content'+' '+ status +'" data-role="content"><ul>';
                         $j.each(value, function (msgindex, msgvalue) {
                             result += '<li>'+ msgvalue +'</li>';
                         });

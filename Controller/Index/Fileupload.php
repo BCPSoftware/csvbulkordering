@@ -128,7 +128,7 @@ class Fileupload extends Action implements HttpPostActionInterface
      */
     public function execute()
     {
-        $log = [];
+        $log['messages']['product'] = ['qty' => 0];
 
         try {
             $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
@@ -223,6 +223,7 @@ class Fileupload extends Action implements HttpPostActionInterface
             if (!empty($unSkuItems)) {
                 $log['messages']['product']['fail'][] = 'The following SKU\'s have not been imported from the CSV File '
                     . count($unSkuItems) . ' (' . implode(", ", $unSkuItems) . ').';
+                $log['messages']['product']['qty'] += count($unSkuItems);
             }
 
             $duplicatesResult = $this->dataHelper->getKeysForDuplicateValues($skuArr);
@@ -230,6 +231,7 @@ class Fileupload extends Action implements HttpPostActionInterface
             if (!empty($duplicatesResult)) {
                 $log['messages']['product']['fail'][] = 'There are ' . count($duplicatesResult) . '
                 duplicated SKUs in uploaded CSV file. Duplicates are removed except very first entries.';
+                $log['messages']['product']['qty'] += count($duplicatesResult);
 
                 foreach ($duplicatesResult as $sku => $duplicates) {
                     foreach ($duplicates as $dupItem) {
@@ -262,6 +264,7 @@ class Fileupload extends Action implements HttpPostActionInterface
                                 $product->getSku(),
                                 $qtyToAdd
                             );
+                            $log['messages']['product']['qty'] ++;
                         }
 
                         if ($qtyToAdd === 0) {
@@ -274,6 +277,7 @@ class Fileupload extends Action implements HttpPostActionInterface
                         } catch (Exception $e) {
                             $log['messages']['product']['fail'][] = 'Product "' . $product->getName() .
                                 '" failed to add to Cart with message: "' . $e->getMessage() . '"';
+                            $log['messages']['product']['qty'] ++;
                         }
 
                         $log['messages']['product']['ok'][] = 'Successfully added "' . $product->getName() .

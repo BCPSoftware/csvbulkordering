@@ -11,6 +11,7 @@ use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
+use Oporteo\Csvorderupload\Api\GetStockProductPricesInterface;
 use Oporteo\Csvorderupload\Helper\Data as CsvOrderUploadHelper;
 use Psr\Log\LoggerInterface;
 
@@ -52,6 +53,11 @@ class PriceList extends AbstractCsv
     private $stockProductQtys;
 
     /**
+     * @var GetStockProductPricesInterface
+     */
+    private $stockProductPrices;
+
+    /**
      * PriceList constructor.
      *
      * @param Context $context
@@ -63,6 +69,7 @@ class PriceList extends AbstractCsv
      * @param PriceHelper $priceHelper
      * @param CsvOrderUploadHelper $csvOrderUploadHelper
      * @param GetStockProductQtysInterface $stockProductQtys
+     * @param GetStockProductPricesInterface $stockProductPrices
      */
     public function __construct(
         Context $context,
@@ -73,12 +80,14 @@ class PriceList extends AbstractCsv
         CollectionFactory $productCollectionFactory,
         PriceHelper $priceHelper,
         CsvOrderUploadHelper $csvOrderUploadHelper,
-        GetStockProductQtysInterface $stockProductQtys
+        GetStockProductQtysInterface $stockProductQtys,
+        GetStockProductPricesInterface $stockProductPrices
     ) {
         $this->productCollectionFactory = $productCollectionFactory;
         $this->priceHelper = $priceHelper;
         $this->csvOrderUploadHelper = $csvOrderUploadHelper;
         $this->stockProductQtys = $stockProductQtys;
+        $this->stockProductPrices = $stockProductPrices;
 
         parent::__construct($context, $fileFactory, $csvWriter, $directoryList, $logger);
     }
@@ -90,13 +99,18 @@ class PriceList extends AbstractCsv
     {
         $productCollection = $this->csvOrderUploadHelper->getProductCollection();
         $stockQtys = $this->stockProductQtys->execute($productCollection->getColumnValues('sku'));
+        $stockPrices = $this->stockProductPrices->execute($productCollection->getColumnValues('sku'));
 
-        $data =  array_map(
-            function ($product) use ($stockQtys) {
+        $data = array_map(
+            function ($product) use ($stockQtys, $stockPrices) {
                 return [
                     $product->getSku(),
                     $product->getName(),
-                    $this->priceHelper->currency($product->getPrice(), true, false),
+                    $this->priceHelper->currency(
+                        array_key_exists($product->getSku(), $stockPrices) ? $stockPrices[$product->getSku()] : 0.0,
+                        true,
+                        false
+                    ),
                     array_key_exists($product->getSku(), $stockQtys) ? $stockQtys[$product->getSku()] : '0',
                 ];
             },

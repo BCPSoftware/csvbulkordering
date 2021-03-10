@@ -3,4 +3,6 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Oporteo\Csvorderupload\Api\GetStockProductQtysInterface"
                 type="Oporteo\Csvorderupload\Model\GetStockProductQtys"/>
+    <preference for="Oporteo\Csvorderupload\Api\GetStockProductPricesInterface"
+                type="Oporteo\Csvorderupload\Model\GetStockProductPrices"/>
 </config>
