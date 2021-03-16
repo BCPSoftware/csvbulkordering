@@ -8,10 +8,11 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
-use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Oporteo\Csvorderupload\Api\GetStockProductPricesInterface;
+use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Oporteo\Csvorderupload\Helper\Data as CsvOrderUploadHelper;
 use Psr\Log\LoggerInterface;
 
@@ -20,6 +21,21 @@ use Psr\Log\LoggerInterface;
  */
 class PriceList extends AbstractCsv
 {
+    /**
+     * @var string
+     */
+    private const CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+    /**
+     * @var string
+     */
+    private const TYPE = 'filename';
+
+    /**
+     * @var string
+     */
+    private const OUTPUT_DIRECTORY = DirectoryList::MEDIA;
+
     /**
      * @var array
      */
@@ -58,6 +74,11 @@ class PriceList extends AbstractCsv
     private $stockProductPrices;
 
     /**
+     * @var FileFactory
+     */
+    private $fileFactory;
+
+    /**
      * PriceList constructor.
      *
      * @param Context $context
@@ -88,8 +109,26 @@ class PriceList extends AbstractCsv
         $this->csvOrderUploadHelper = $csvOrderUploadHelper;
         $this->stockProductQtys = $stockProductQtys;
         $this->stockProductPrices = $stockProductPrices;
+        $this->fileFactory = $fileFactory;
 
         parent::__construct($context, $fileFactory, $csvWriter, $directoryList, $logger);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createFile(string $outputFile): ResponseInterface
+    {
+        return $this->fileFactory->create(
+            $outputFile,
+            [
+                'type' => self::TYPE,
+                'value' => $outputFile,
+                'rm' => true,
+            ],
+            self::OUTPUT_DIRECTORY,
+            self::CONTENT_TYPE
+        );
     }
 
     /**
