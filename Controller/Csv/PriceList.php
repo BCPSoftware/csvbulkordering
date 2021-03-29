@@ -9,11 +9,11 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\File\Csv;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Oporteo\Csvorderupload\Api\GetStockProductPricesInterface;
 use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Oporteo\Csvorderupload\Helper\Data as CsvOrderUploadHelper;
+use Oporteo\Csvorderupload\Model\Csv;
 use Psr\Log\LoggerInterface;
 
 /**
