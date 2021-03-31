@@ -4,7 +4,7 @@
         <tab id="accord_settings" translate="label" sortOrder="0">
             <label>Oporteo Settings</label>
         </tab>
-        <section id="oporteo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+        <section id="oporteo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="100" translate="label">
             <label>Order Upload</label>
             <tab>accord_settings</tab>
             <resource>Oporteo_Csvorderupload::config_oporteo_csvorderupload</resource>
