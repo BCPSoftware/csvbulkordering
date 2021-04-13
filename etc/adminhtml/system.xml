@@ -12,7 +12,11 @@
                 <label>General</label>
                 <field id="enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
                     <label>Enabled</label>
-                    <comment/>
+                    <comment>
+                        In order to start using 'Order Upload', you need to set the 'Enable' field to 'Yes'. The system
+                        will automatically add the link to the standard menu. If you are using 'NinjaMenus' you need to
+                        add a new menu item with the value '/orderupload' for the 'Custom Link' field in 'Menu Builder'.
+                    </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="plof" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">

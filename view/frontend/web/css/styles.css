@@ -162,3 +162,25 @@
     border-radius: 3px;
     float: left;
 }
+.orderupload-msg.fail > div:after,
+.orderupload-msg.ok > div:after {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    line-height: 20px;
+    color: inherit;
+    content: '\e622';
+    font-family: 'luma-icons';
+    vertical-align: middle;
+    display: inline-block;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.orderupload-msg.fail.active > div:after,
+.orderupload-msg.ok.active > div:after {
+    content: '\e621';
+}

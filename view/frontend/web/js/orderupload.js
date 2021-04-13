@@ -108,7 +108,6 @@ require([
     function getProductMsg(messages)
     {
         var result = '';
-        console.log(messages);
         if (messages.length != 0) {
             $j.each(messages, function (status, value) {
                 switch (status) {
