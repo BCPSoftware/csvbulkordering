@@ -161,7 +161,12 @@ class Fileupload extends Action implements HttpPostActionInterface
             }
 
             $csvData = $this->csv->getData($target);
-            $headers = array_map('strtolower', $csvData[0]);
+            $headers = array_map(
+                function ($item) {
+                    return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', strtolower($item));
+                },
+                $csvData[0]
+            );
             $columnsCount = count($headers);
 
             foreach ($csvData as $csvRowIndex => $csvRowData) {
