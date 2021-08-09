@@ -161,7 +161,12 @@ class Fileupload extends Action implements HttpPostActionInterface
             }
 
             $csvData = $this->csv->getData($target);
-            $headers = array_map('strtolower', $csvData[0]);
+            $headers = array_map(
+                function ($item) {
+                    return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', strtolower($item));
+                },
+                $csvData[0]
+            );
             $columnsCount = count($headers);
 
             foreach ($csvData as $csvRowIndex => $csvRowData) {
@@ -255,8 +260,8 @@ class Fileupload extends Action implements HttpPostActionInterface
 
                     foreach ($collectionToAdd as $product) {
                         $qtyToAdd = ($qtys[$product->getSku()] > $stockQtys[$product->getSku()])
-                            ? $stockQtys[$product->getSku()]
-                            : $qtys[$product->getSku()];
+                            ? (float)$stockQtys[$product->getSku()]
+                            : (float)$qtys[$product->getSku()];
 
                         if ($stockQtys[$product->getSku()] < $qtys[$product->getSku()]) {
                             $log['messages']['product']['fail'][] = sprintf(
@@ -267,7 +272,7 @@ class Fileupload extends Action implements HttpPostActionInterface
                             $log['messages']['product']['qty'] ++;
                         }
 
-                        if ($qtyToAdd === 0) {
+                        if ($qtyToAdd === 0.0) {
                             continue;
                         }
 

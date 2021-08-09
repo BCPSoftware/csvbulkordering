@@ -44,6 +44,7 @@ class PriceList extends AbstractCsv
             'Sku',
             'Name',
             'Price',
+            'Available Stock',
             'Qty',
         ],
     ];
@@ -151,6 +152,7 @@ class PriceList extends AbstractCsv
                         false
                     ),
                     array_key_exists($product->getSku(), $stockQtys) ? $stockQtys[$product->getSku()] : '0',
+                    '',
                 ];
             },
             $productCollection->getItems()
