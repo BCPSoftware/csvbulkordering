@@ -260,8 +260,8 @@ class Fileupload extends Action implements HttpPostActionInterface
 
                     foreach ($collectionToAdd as $product) {
                         $qtyToAdd = ($qtys[$product->getSku()] > $stockQtys[$product->getSku()])
-                            ? $stockQtys[$product->getSku()]
-                            : $qtys[$product->getSku()];
+                            ? (float)$stockQtys[$product->getSku()]
+                            : (float)$qtys[$product->getSku()];
 
                         if ($stockQtys[$product->getSku()] < $qtys[$product->getSku()]) {
                             $log['messages']['product']['fail'][] = sprintf(
@@ -272,7 +272,7 @@ class Fileupload extends Action implements HttpPostActionInterface
                             $log['messages']['product']['qty'] ++;
                         }
 
-                        if ($qtyToAdd === 0) {
+                        if ($qtyToAdd === 0.0) {
                             continue;
                         }
 
