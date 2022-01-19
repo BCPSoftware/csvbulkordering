@@ -65,7 +65,8 @@ require([
 
     function clearMessages()
     {
-        $j('#notifications').html('');
+        $j('#notifications').accordion().accordion('destroy');
+        $j('#notifications').empty();
     }
 
     function showMessages(data)
@@ -163,7 +164,7 @@ require([
             processData: false,
             contentType: false,
             success: function (data, textStatus, jqXHR) {
-            
+
                 hideLoading();
                 if (!$j.isEmptyObject(data['messages'])) {
                     showMessages(data['messages']);
@@ -172,7 +173,7 @@ require([
                 showCheckoutBtn(data['cart_items_qty']);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-            
+
                 alert('ERROR: ' + textStatus);
                 console.log('ERRORS: ' + textStatus);
                 hideLoading();

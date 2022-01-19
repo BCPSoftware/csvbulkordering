@@ -248,7 +248,6 @@ class Fileupload extends Action implements HttpPostActionInterface
 
             $this->file->deleteFile($target);
             $importResult = ['skuArr' => $skuArr, 'qtyArr' => $qtyArr];
-            $log['messages']['csv']['ok'][] = 'Successfully read CSV file.';
 
             if (!empty($skuArr = $importResult['skuArr']) && !empty($qtyArr = $importResult['qtyArr'])) {
                 $collectionToAdd = $this->dataHelper->getProductCollectionBySku($skuArr);
