@@ -277,19 +277,20 @@ class Fileupload extends Action implements HttpPostActionInterface
                         }
 
                         try {
-                            $item = $quote->addProduct($product, $qtyToAdd);
-                            $quote->addItem($item);
+                            $this->cart->addProduct($product, $qtyToAdd);
                         } catch (Exception $e) {
                             $log['messages']['product']['fail'][] = 'Product "' . $product->getName() .
                                 '" failed to add to Cart with message: "' . $e->getMessage() . '"';
                             $log['messages']['product']['qty'] ++;
+
+                            continue;
                         }
+                        $this->cart->save();
 
                         $log['messages']['product']['ok'][] = 'Successfully added "' . $product->getName() .
                             '" to basket.';
                     }
 
-                    $this->cart->save();
                     $totalItems = $quote->getItemsCount();
 
                     if ($totalItems) {
