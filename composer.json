@@ -2,11 +2,12 @@
     "name": "oporteo/module-csvorderupload",
     "description": "",
     "type": "magento2-module",
-    "license": "proprietary",
+    "license": "OSL-3.0",
+    "version": "8.4.0",
     "authors": [
         {
-            "email": "info@whidegroup.com",
-            "name": "Whidegroup"
+            "email": "sales@oporteo.co.uk",
+            "name": "Oporteo"
         }
     ],
     "minimum-stability": "dev",
