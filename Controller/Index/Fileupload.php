@@ -256,6 +256,8 @@ class Fileupload extends Action implements HttpPostActionInterface
                 $stockQtys = $this->stockProductQtys->execute($skuArr);
 
                 if (!empty($collectionToAdd)) {
+                    $quote = $this->cart->getQuote();
+                    $quote->setTotalsCollectedFlag(true);
 
                     foreach ($collectionToAdd as $product) {
                         $qtyToAdd = ($qtys[$product->getSku()] > $stockQtys[$product->getSku()])
@@ -290,6 +292,8 @@ class Fileupload extends Action implements HttpPostActionInterface
                             '" to basket.';
                     }
 
+                    $quote->setTotalsCollectedFlag(false);
+                    $this->cart->save();
                     $totalItems = $quote->getItemsCount();
 
                     if ($totalItems) {
