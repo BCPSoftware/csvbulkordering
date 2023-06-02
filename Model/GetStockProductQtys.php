@@ -10,37 +10,17 @@ use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class GetStockProductQtys
- */
 class GetStockProductQtys implements GetStockProductQtysInterface
 {
     /**
-     * @var GetProductSalableQtyInterface
-     */
-    private $productSalableQty;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * GetStockProductQtys constructor.
-     *
      * @param GetProductSalableQtyInterface $productSalableQty
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param LoggerInterface $logger
      */
     public function __construct(
-        GetProductSalableQtyInterface $productSalableQty,
-        DefaultStockProviderInterface $defaultStockProvider,
-        LoggerInterface $logger
+        private GetProductSalableQtyInterface $productSalableQty,
+        private DefaultStockProviderInterface $defaultStockProvider,
+        private LoggerInterface $logger
     ) {
         $this->productSalableQty = $productSalableQty;
         $this->defaultStockProvider = $defaultStockProvider;

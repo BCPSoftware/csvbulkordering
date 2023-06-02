@@ -2,25 +2,26 @@
 
 namespace Oporteo\Csvorderupload\Block;
 
+use Magento\Backend\Block\Context;
+use Magento\Backend\Model\Auth\Session;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\View\Helper\Js;
+use Magento\Framework\View\LayoutFactory;
+use Oporteo\Csvorderupload\Helper\Data;
 
 class Version extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
-
     public function __construct(
-        \Magento\Backend\Block\Context $context,
-        \Magento\Backend\Model\Auth\Session $authSession,
-        \Magento\Framework\View\Helper\Js $jsHelper,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\View\LayoutFactory $layoutFactory,
-        \Oporteo\Csvorderupload\Helper\Data $moduleHelper,
+        Context $context,
+        Session $authSession,
+        Js $jsHelper,
+        private ModuleListInterface $moduleList,
+        private LayoutFactory $layoutFactory,
+        private Data $moduleHelper,
         array $data = []
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
-
-        $this->_moduleList    = $moduleList;
-        $this->_layoutFactory = $layoutFactory;
-        $this->_moduleHelper  = $moduleHelper;
     }
 
     public function render(AbstractElement $element)

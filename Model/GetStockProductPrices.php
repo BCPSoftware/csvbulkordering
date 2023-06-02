@@ -15,28 +15,13 @@ use Psr\Log\LoggerInterface;
 class GetStockProductPrices implements GetStockProductPricesInterface
 {
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * GetStockProductPrices constructor.
-     *
      * @param ProductRepository $productRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
-        ProductRepository $productRepository,
-        LoggerInterface $logger
-    ) {
-        $this->productRepository = $productRepository;
-        $this->logger = $logger;
-    }
+        private ProductRepository $productRepository,
+        private LoggerInterface $logger
+    ) {}
 
     /**
      * @param array $skus
@@ -66,7 +51,7 @@ class GetStockProductPrices implements GetStockProductPricesInterface
         } catch (Exception $exception) {
             $this->logger->critical($exception);
         }
-        
+
         return 0.0;
     }
 }

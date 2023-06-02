@@ -15,69 +15,14 @@ use Magento\Framework\File\Csv;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Driver\File;
 use Magento\Framework\Serialize\SerializerInterface;
-use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Magento\MediaStorage\Model\File\UploaderFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
+use Oporteo\Csvorderupload\Api\GetStockProductQtysInterface;
 use Oporteo\Csvorderupload\Helper\Data as DataHelper;
 
-/**
- * Class Fileupload
- */
 class Fileupload extends Action implements HttpPostActionInterface
 {
     /**
-     * @var Csv
-     */
-    private $csv;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var File
-     */
-    private $file;
-
-    /**
-     * @var UploaderFactory
-     */
-    private $fileUploaderFactory;
-
-    /**
-     * @var DataHelper
-     */
-    private $dataHelper;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var QuoteResourceModel
-     */
-    private $quoteResourceModel;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var GetStockProductQtysInterface
-     */
-    private $stockProductQtys;
-
-    /**
-     * @var Cart
-     */
-    private $cart;
-
-    /**
-     * Fileupload constructor.
-     *
      * @param Context $context
      * @param Filesystem $filesystem
      * @param File $file
@@ -92,28 +37,17 @@ class Fileupload extends Action implements HttpPostActionInterface
      */
     public function __construct(
         Context $context,
-        Filesystem $filesystem,
-        File $file,
-        UploaderFactory $fileUploaderFactory,
-        Csv $csv,
-        Session $session,
-        GetStockProductQtysInterface $stockProductQtys,
-        DataHelper $dataHelper,
-        QuoteResourceModel $quoteResourceModel,
-        SerializerInterface $serializer,
-        Cart $cart
+        private Filesystem $filesystem,
+        private File $file,
+        private UploaderFactory $fileUploaderFactory,
+        private Csv $csv,
+        private Session $session,
+        private GetStockProductQtysInterface $stockProductQtys,
+        private DataHelper $dataHelper,
+        private QuoteResourceModel $quoteResourceModel,
+        private SerializerInterface $serializer,
+        private Cart $cart
     ) {
-        $this->filesystem = $filesystem;
-        $this->file = $file;
-        $this->fileUploaderFactory = $fileUploaderFactory;
-        $this->csv = $csv;
-        $this->session = $session;
-        $this->dataHelper = $dataHelper;
-        $this->quoteResourceModel = $quoteResourceModel;
-        $this->serializer = $serializer;
-        $this->stockProductQtys = $stockProductQtys;
-        $this->cart = $cart;
-
         parent::__construct($context);
     }
 

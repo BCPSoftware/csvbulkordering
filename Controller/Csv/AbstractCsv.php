@@ -14,49 +14,15 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\File\Csv;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class AbstractCsv
- */
 abstract class AbstractCsv extends Action
 {
-    /**
-     * @var string
-     */
     private const CONTENT_TYPE = 'application/vnd.ms-excel';
 
-    /**
-     * @var string
-     */
     private const TYPE = 'filename';
 
-    /**
-     * @var string
-     */
     private const OUTPUT_DIRECTORY = DirectoryList::MEDIA;
 
     /**
-     * @var FileFactory
-     */
-    private $fileFactory;
-
-    /**
-     * @var Csv
-     */
-    private $csvWriter;
-
-    /**
-     * @var DirectoryList
-     */
-    private $directoryList;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * AbstractCsv constructor.
-     *
      * @param Context $context
      * @param FileFactory $fileFactory
      * @param Csv $csvWriter
@@ -65,16 +31,11 @@ abstract class AbstractCsv extends Action
      */
     public function __construct(
         Context $context,
-        FileFactory $fileFactory,
-        Csv $csvWriter,
-        DirectoryList $directoryList,
-        LoggerInterface $logger
+        protected FileFactory $fileFactory,
+        private Csv $csvWriter,
+        private DirectoryList $directoryList,
+        private LoggerInterface $logger
     ) {
-        $this->fileFactory = $fileFactory;
-        $this->csvWriter = $csvWriter;
-        $this->directoryList = $directoryList;
-        $this->logger = $logger;
-
         parent::__construct($context);
     }
 

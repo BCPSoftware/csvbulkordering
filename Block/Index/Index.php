@@ -2,15 +2,16 @@
 
 namespace Oporteo\Csvorderupload\Block\Index;
 
+use Magento\Framework\View\Element\Template\Context;
+use Oporteo\Csvorderupload\Helper\Data;
+
 class Index extends \Magento\Framework\View\Element\Template
 {
-
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Oporteo\Csvorderupload\Helper\Data $helperData,
+        Context $context,
+        private Data $helperData,
         array $data = []
     ) {
-        $this->helper   = $helperData;
         parent::__construct($context, $data);
     }
 

@@ -2,19 +2,19 @@
 
 namespace Oporteo\Csvorderupload\Helper;
 
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Checkout\Helper\Cart;
+use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use \Magento\Framework\App\Helper\AbstractHelper;
-use \Magento\Store\Model\ScopeInterface as ScopeInterface;
+use Magento\Store\Model\ScopeInterface as ScopeInterface;
 
 class Data extends AbstractHelper
 {
     public function __construct(
         Context $context,
-        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        \Magento\Checkout\Helper\Cart $cartHelper
+        private CollectionFactory $productCollectionFactory,
+        private Cart $cartHelper
     ) {
-        $this->cartHelper = $cartHelper;
-        $this->productCollectionFactory = $productCollectionFactory;
         parent::__construct($context);
     }
 

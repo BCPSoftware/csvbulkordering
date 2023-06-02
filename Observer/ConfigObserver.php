@@ -2,19 +2,18 @@
 
 namespace Oporteo\Csvorderupload\Observer;
 
-use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\App\Cache\Frontend\Pool;
+use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Event\ObserverInterface;
 
 class ConfigObserver implements ObserverInterface
 {
 
     public function __construct(
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \Magento\Framework\App\Cache\Frontend\Pool $cacheFrontendPool
-    ) {
-        $this->_cacheTypeList        = $cacheTypeList;
-        $this->_cacheFrontendPool    = $cacheFrontendPool;
-    }
+        private TypeListInterface $cacheTypeList,
+        private Pool $cacheFrontendPool
+    ) {}
 
     public function execute(EventObserver $observer)
     {

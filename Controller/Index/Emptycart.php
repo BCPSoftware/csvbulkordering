@@ -1,24 +1,23 @@
 <?php
 
-
 namespace Oporteo\Csvorderupload\Controller\Index;
+
+use Magento\Checkout\Model\Cart;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
 
 class Emptycart extends \Magento\Framework\App\Action\Action
 {
-
     /**
-     * Constructor
-     *
-     * @param \Magento\Framework\App\Action\Context  $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param Cart $cart
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Magento\Checkout\Model\Cart $cart
+        Context $context,
+        private PageFactory $resultPageFactory,
+        private Cart $cart
     ) {
-        $this->resultPageFactory    = $resultPageFactory;
-        $this->cart = $cart;
         parent::__construct($context);
     }
 

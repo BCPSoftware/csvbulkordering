@@ -50,38 +50,6 @@ class PriceList extends AbstractCsv
     ];
 
     /**
-     * @var CollectionFactory
-     */
-    private $productCollectionFactory;
-
-    /**
-     * @var PriceHelper
-     */
-    private $priceHelper;
-
-    /**
-     * @var CsvOrderUploadHelper
-     */
-    private $csvOrderUploadHelper;
-
-    /**
-     * @var GetStockProductQtysInterface
-     */
-    private $stockProductQtys;
-
-    /**
-     * @var GetStockProductPricesInterface
-     */
-    private $stockProductPrices;
-
-    /**
-     * @var FileFactory
-     */
-    private $fileFactory;
-
-    /**
-     * PriceList constructor.
-     *
      * @param Context $context
      * @param FileFactory $fileFactory
      * @param Csv $csvWriter
@@ -99,19 +67,12 @@ class PriceList extends AbstractCsv
         Csv $csvWriter,
         DirectoryList $directoryList,
         LoggerInterface $logger,
-        CollectionFactory $productCollectionFactory,
-        PriceHelper $priceHelper,
-        CsvOrderUploadHelper $csvOrderUploadHelper,
-        GetStockProductQtysInterface $stockProductQtys,
-        GetStockProductPricesInterface $stockProductPrices
+        private CollectionFactory $productCollectionFactory,
+        private PriceHelper $priceHelper,
+        private CsvOrderUploadHelper $csvOrderUploadHelper,
+        private GetStockProductQtysInterface $stockProductQtys,
+        private GetStockProductPricesInterface $stockProductPrices
     ) {
-        $this->productCollectionFactory = $productCollectionFactory;
-        $this->priceHelper = $priceHelper;
-        $this->csvOrderUploadHelper = $csvOrderUploadHelper;
-        $this->stockProductQtys = $stockProductQtys;
-        $this->stockProductPrices = $stockProductPrices;
-        $this->fileFactory = $fileFactory;
-
         parent::__construct($context, $fileFactory, $csvWriter, $directoryList, $logger);
     }
 
