@@ -14,6 +14,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Driver\File;
+use Magento\Framework\Registry;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\MediaStorage\Model\File\UploaderFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResourceModel;
@@ -46,7 +47,8 @@ class Fileupload extends Action implements HttpPostActionInterface
         private DataHelper $dataHelper,
         private QuoteResourceModel $quoteResourceModel,
         private SerializerInterface $serializer,
-        private Cart $cart
+        private Cart $cart,
+        private Registry $registry
     ) {
         parent::__construct($context);
     }
@@ -62,6 +64,8 @@ class Fileupload extends Action implements HttpPostActionInterface
      */
     public function execute()
     {
+        $this->registry->register('isApiArea', true);
+
         $log['messages']['product'] = ['qty' => 0];
 
         try {
@@ -220,7 +224,6 @@ class Fileupload extends Action implements HttpPostActionInterface
 
                             continue;
                         }
-                        $this->cart->save();
 
                         $log['messages']['product']['ok'][] = 'Successfully added "' . $product->getName() .
                             '" to basket.';
@@ -236,6 +239,8 @@ class Fileupload extends Action implements HttpPostActionInterface
                 }
             }
         }
+
+        $this->registry->unregister('isApiArea');
 
         return $this->getResponse()->representJson($this->serializer->serialize($log));
     }
