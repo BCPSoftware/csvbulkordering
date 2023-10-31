@@ -15,22 +15,22 @@ class Index extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
 
-    public function getCacheLifetime()
+    public function getCacheLifetime(): null
     {
         return null;
     }
 
-    public function getConfig($config_path)
+    public function getConfig(string $config_path): string
     {
-        return $this->helper->getConfig($config_path);
+        return $this->helperData->getConfig($config_path);
     }
 
-    public function isEmptyCart()
+    public function isEmptyCart(): bool
     {
-        return $this->helper->isEmptyCart();
+        return $this->helperData->isEmptyCart();
     }
 
-    public function isScopePrivate()
+    public function isScopePrivate(): true
     {
         return true;
     }
