@@ -3,7 +3,7 @@
     "description": "",
     "type": "magento2-module",
     "license": "OSL-3.0",
-    "version": "9.3.0",
+    "version": "9.4.0-RC1",
     "authors": [
         {
             "email": "sales@oporteo.co.uk",
@@ -11,7 +11,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "shuchkin/simplexlsx": "1.1.11"
+    },
     "autoload": {
         "psr-4": {
             "Oporteo\\Csvorderupload\\": ""
@@ -19,5 +21,11 @@
         "files": [
             "registration.php"
         ]
+    },
+    "repositories": {
+        "simplexlsx": {
+            "type": "vcs",
+            "url": "git@github.com:shuchkin/simplexlsx.git"
+        }
     }
 }

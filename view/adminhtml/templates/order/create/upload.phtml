@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var Upload $block
+ * @var SecureHtmlRenderer $secureRenderer
+ */
+
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Oporteo\Csvorderupload\Block\Adminhtml\Order\Create\Upload;
+
+$scriptString = "window.fileUploadUrl = '{$block->getUrl('sales/order_create/fromfile', ['_nosecret' => true])}'"
+
+?>
+
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+
