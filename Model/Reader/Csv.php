@@ -38,10 +38,14 @@ class Csv implements FileReaderInterface
         return array_reduce(
             $content,
             static function (array $carry, array $item) use ($skuIndex, $qtyIndex) {
-                $carry[] = [
-                    self::COL_SKU => $item[$skuIndex],
-                    self::COL_QTY => (int) $item[$qtyIndex],
-                ];
+                $qty = (int) $item[$qtyIndex];
+
+                if ($qty) {
+                    $carry[] = [
+                        self::COL_SKU => $item[$skuIndex],
+                        self::COL_QTY => $qty,
+                    ];
+                }
 
                 return $carry;
             },

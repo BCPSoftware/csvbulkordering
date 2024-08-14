@@ -7,6 +7,7 @@ namespace Oporteo\Csvorderupload\Helper;
 use Exception;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteFactory;
@@ -30,18 +31,18 @@ class File
      * @return array<string, int>
      * @throws ValidatorException
      * @throws FileSystemException
+     * @throws LocalizedException
      */
     public function getContent(array $file): array
     {
         try {
-            switch ($file['type']) {
-                case 'text/csv':
-                    return $this->csv->read(filePath: $file['tmp_name']);
-                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    return $this->xlsx->read(filePath: $file['tmp_name']);
-                default:
-                    throw new ValidatorException(__('File format not supported.'));
-            }
+            return match ($file['type']) {
+                'text/csv' => $this->csv->read(filePath: $file['tmp_name']),
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => $this->xlsx->read(
+                    filePath: $file['tmp_name']
+                ),
+                default => throw new ValidatorException(__('File format not supported.')),
+            };
         } catch (Exception $e) {
             $this->moveFile(filePath: $file['tmp_name'], filename: $file['name']);
 

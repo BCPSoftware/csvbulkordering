@@ -33,10 +33,14 @@ class Xlsx implements FileReaderInterface
                 throw new LocalizedException(__('Cannot read file header.'));
             }
 
-            $content[] = [
-                self::COL_SKU => $row[$skuIndex],
-                self::COL_QTY => (int) $row[$qtyIndex],
-            ];
+            $qty = (int) $row[$qtyIndex];
+
+            if ($qty) {
+                $content[] = [
+                    self::COL_SKU => $row[$skuIndex],
+                    self::COL_QTY => $qty,
+                ];
+            }
         }
 
         return $content;
