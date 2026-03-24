@@ -1,31 +1,22 @@
 {
     "name": "oporteo/module-csvorderupload",
-    "description": "",
+    "description": "Bulk add to cart from CSV, XLS, XLSX upload.",
     "type": "magento2-module",
-    "license": "OSL-3.0",
-    "version": "9.4.0",
-    "authors": [
-        {
-            "email": "sales@oporteo.co.uk",
-            "name": "Oporteo"
-        }
+    "license": [
+        "proprietary"
     ],
-    "minimum-stability": "dev",
     "require": {
-        "shuchkin/simplexlsx": "1.1.11"
+        "php": "^8.3",
+        "magento/framework": ">=103.0.7",
+        "phpoffice/phpspreadsheet": "^5.5",
+        "ext-fileinfo": "*"
     },
     "autoload": {
-        "psr-4": {
-            "Oporteo\\Csvorderupload\\": ""
-        },
         "files": [
             "registration.php"
-        ]
-    },
-    "repositories": {
-        "simplexlsx": {
-            "type": "vcs",
-            "url": "git@github.com:shuchkin/simplexlsx.git"
+        ],
+        "psr-4": {
+            "Oporteo\\OrderUpload\\": ""
         }
     }
 }

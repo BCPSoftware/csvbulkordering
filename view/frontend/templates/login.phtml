@@ -1,0 +1,25 @@
+<?php
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ * @var OrderUpload $viewModel
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Oporteo\OrderUpload\ViewModel\OrderUpload;
+
+$viewModel = $block->getData('view_model');
+
+?>
+
+<?php if (!$viewModel->canUpload()): ?>
+    <div class="order-upload__login">
+        <p><?= $escaper->escapeHtml(__('Please sign in to upload an order file.')) ?></p>
+        <a class="action primary"
+           href="#"
+           data-mage-init='{"Oporteo_OrderUpload/js/open-authentication-popup":{}}'>
+            <span><?= $escaper->escapeHtml(__('Login')) ?></span>
+        </a>
+    </div>
+<?php endif; ?>

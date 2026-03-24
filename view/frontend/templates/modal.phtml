@@ -1,0 +1,55 @@
+<?php
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ * @var OrderUpload $viewModel
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Oporteo\OrderUpload\ViewModel\OrderUpload;
+
+$viewModel = $block->getData('view_model');
+
+?>
+
+<?php if ($viewModel->canUpload()): ?>
+    <div class="order-upload__modal" data-role="validation-modal" hidden>
+        <div class="order-upload__modal-body">
+            <p class="order-upload__summary-text" data-role="summary-text"></p>
+
+            <div class="order-upload__summary-section" data-role="summary-successes-section">
+                <h2><?= $escaper->escapeHtml(__('Would Be Added')) ?></h2>
+                <div class="table-wrapper">
+                    <table class="data table">
+                        <thead>
+                        <tr>
+                            <th><?= $escaper->escapeHtml(__('Row')) ?></th>
+                            <th><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                            <th><?= $escaper->escapeHtml(__('Product')) ?></th>
+                            <th><?= $escaper->escapeHtml(__('Qty')) ?></th>
+                        </tr>
+                        </thead>
+                        <tbody data-role="validation-successes"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="order-upload__summary-section" data-role="summary-failures-section">
+                <h2><?= $escaper->escapeHtml(__('Would Not Be Added')) ?></h2>
+                <div class="table-wrapper">
+                    <table class="data table">
+                        <thead>
+                        <tr>
+                            <th><?= $escaper->escapeHtml(__('Row')) ?></th>
+                            <th><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                            <th><?= $escaper->escapeHtml(__('Reason')) ?></th>
+                        </tr>
+                        </thead>
+                        <tbody data-role="validation-failures"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

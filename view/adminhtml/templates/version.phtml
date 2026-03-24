@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var Version $block
+ * @var Escaper $escaper
+ */
+
+use Magento\Framework\Escaper;
+use Oporteo\OrderUpload\Block\Adminhtml\System\Version;
+
+?>
+
+<p class="magento-version">
+    <strong><?= $escaper->escapeHtml(__($block->getName())) ?></strong>
+    <?= $escaper->escapeHtml(__('ver. %1', $block->getVersion())) ?>
+</p>

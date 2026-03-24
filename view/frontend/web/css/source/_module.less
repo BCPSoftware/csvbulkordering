@@ -1,0 +1,218 @@
+.order-upload {
+    &__intro {
+        margin-bottom: 20px;
+    }
+
+    &__template {
+        margin-bottom: 20px;
+    }
+
+    &__status {
+        margin-bottom: 20px;
+        border: 1px solid #d6d6d6;
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+
+        &[open] {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
+        }
+
+        &--success {
+            border-color: #9bc79b;
+        }
+
+        &--error {
+            border-color: #d6a1a1;
+        }
+
+        &--disabled {
+            border-color: #c9c9c9;
+            background: #f8f8f8;
+        }
+    }
+
+    &__status-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        font-weight: 600;
+        cursor: pointer;
+        list-style: none;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::marker {
+            display: none;
+            content: '';
+        }
+
+        &::after {
+            content: '';
+            flex: 0 0 auto;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform .2s ease;
+        }
+    }
+
+    &__status[open] &__status-title::after {
+        transform: rotate(225deg);
+    }
+
+    &__status-body {
+        padding: 0 20px 20px;
+    }
+
+    &__dropzone {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        min-height: 180px;
+        padding: 24px;
+        margin-bottom: 16px;
+        border: 2px dashed #8a8a8a;
+        border-radius: 12px;
+        background: #fafafa;
+        cursor: pointer;
+        text-align: center;
+        transition: border-color .2s ease, background-color .2s ease;
+
+        &.is-active {
+            border-color: #1979c3;
+            background: #f2f8fc;
+        }
+
+        &.has-file {
+            border-color: #2e7d32;
+            background: #f4fbf4;
+        }
+    }
+
+    &__dropzone-title {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    &__dropzone-hint {
+        color: #5f5f5f;
+    }
+
+    &__filename {
+        margin-top: 4px;
+        font-weight: 600;
+        color: #1a1a1a;
+        word-break: break-word;
+    }
+
+    &__input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        border: 0;
+        clip: rect(0, 0, 0, 0);
+    }
+
+    &__login {
+        margin: 24px 0;
+    }
+
+    &__cart {
+        display: flex;
+        gap: 24px;
+        margin-top: 24px;
+        align-items: flex-start;
+    }
+
+    &__cart-items {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__cart-summary {
+        flex: 0 0 300px;
+        width: 300px;
+    }
+
+    &__cart .cart.main.actions {
+        display: none;
+    }
+
+    &__cart .table caption {
+        display: none;
+    }
+
+    &__cart .summary.title {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    &__cart .cart-totals {
+        margin-top: 0;
+    }
+
+    &__cart .cart.items {
+        margin-bottom: 0;
+    }
+
+    &__cart .cart-empty {
+        color: #5f5f5f;
+    }
+
+    &__modal {
+        display: none;
+    }
+
+    &__modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__summary-text {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    &__summary-section {
+        min-width: 0;
+    }
+}
+
+.order-upload__validation-modal {
+    .modal-inner-wrap {
+        max-width: 960px;
+    }
+}
+
+@media (max-width: 767px) {
+    .order-upload {
+        &__cart {
+            flex-direction: column;
+        }
+
+        &__cart-summary {
+            flex: 1 1 auto;
+            width: 100%;
+        }
+    }
+
+    .order-upload__validation-modal {
+        &.modal-slide {
+            .modal-inner-wrap {
+                width: 100%;
+            }
+        }
+    }
+}

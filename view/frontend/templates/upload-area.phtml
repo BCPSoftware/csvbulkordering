@@ -1,0 +1,40 @@
+<?php
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ * @var OrderUpload $viewModel
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Oporteo\OrderUpload\ViewModel\OrderUpload;
+
+$viewModel = $block->getData('view_model');
+
+?>
+
+<?php if ($viewModel->canUpload()): ?>
+    <form class="order-upload__form"
+          action="<?= $escaper->escapeUrl($viewModel->getValidateUrl()) ?>"
+          method="post"
+          enctype="multipart/form-data">
+        <?= $block->getBlockHtml('formkey') ?>
+        <label class="order-upload__dropzone" for="orderupload-file">
+            <span class="order-upload__dropzone-title">
+                <?= $escaper->escapeHtml(__('Drop file here or click to upload')) ?>
+            </span>
+            <span class="order-upload__dropzone-hint">
+                <?= $escaper->escapeHtml(__('Supported formats: CSV, XLS, XLSX. Validation starts automatically after selection.')) ?>
+            </span>
+            <span class="order-upload__filename" data-role="selected-file">
+                <?= $escaper->escapeHtml(__('No file selected')) ?>
+            </span>
+        </label>
+        <input id="orderupload-file"
+               class="order-upload__input"
+               type="file"
+               name="upload_file"
+               accept=".csv,.xls,.xlsx"
+               required />
+    </form>
+<?php endif; ?>
