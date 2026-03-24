@@ -1,33 +1,39 @@
-<?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="accord_settings" translate="label" sortOrder="0">
+        <tab id="accord_settings" translate="label">
             <label>Oporteo Settings</label>
         </tab>
-        <section id="oporteo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="100" translate="label">
+
+        <section id="order_upload" translate="label" type="text" sortOrder="100"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Order Upload</label>
             <tab>accord_settings</tab>
-            <resource>Oporteo_Csvorderupload::config_oporteo_csvorderupload</resource>
-            <group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <resource>Oporteo_OrderUpload::config</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
-                <field id="enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+                <field id="enabled" translate="label comment" type="select" sortOrder="5"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
                         In order to start using 'Order Upload', you need to set the 'Enable' field to 'Yes'. The system
                         will automatically add the link to the standard menu. If you are using 'NinjaMenus' you need to
                         add a new menu item with the value '/orderupload' for the 'Custom Link' field in 'Menu Builder'.
                     </comment>
+                </field>
+                <field id="price_list" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Price List Download Link</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="plof" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-                    <label>Price List Download</label>
-                    <comment/>
-                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                <field id="page_text" translate="label comment" type="textarea" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Page Text</label>
+                    <comment>Text shown above the upload form. Allowed tags: TBD</comment>
                 </field>
-            </group>
-            <group id="information" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Info</label>
-                <frontend_model>Oporteo\Csvorderupload\Block\Version</frontend_model>
             </group>
         </section>
     </system>

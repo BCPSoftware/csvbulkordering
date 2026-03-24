@@ -1,0 +1,16 @@
+<?php
+/**
+ * @var Template $block
+ * @var OrderUpload $viewModel
+ */
+
+use Magento\Framework\View\Element\Template;
+use Oporteo\OrderUpload\ViewModel\OrderUpload;
+
+$viewModel = $block->getData('view_model');
+
+?>
+
+<div class="order-upload__intro">
+    <?= /** @noEscape */ $viewModel->getPageText() ?>
+</div>

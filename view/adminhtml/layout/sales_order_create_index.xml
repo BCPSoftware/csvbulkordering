@@ -1,10 +1,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="gift_options_link" remove="true"/>
-
-        <referenceBlock name="content">
-            <block name="items.upload" class="Oporteo\Csvorderupload\Block\Adminhtml\Order\Create\Upload"/>
-        </referenceBlock>
+        <referenceContainer name="js">
+            <block class="Magento\Backend\Block\Template"
+                   name="oporteo.orderupload.admin.create.upload"
+                   ifconfig="order_upload/general/enabled"
+                   template="Oporteo_OrderUpload::order/create/upload.phtml"/>
+        </referenceContainer>
     </body>
 </page>

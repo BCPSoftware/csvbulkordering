@@ -1,15 +1,63 @@
-<?xml version="1.0" ?>
-<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="Oporteo_Csvorderupload::css/styles.css"/>
-        <script src="Oporteo_Csvorderupload::js/orderupload.js"/>
-    </head>
+    <update handle="checkout_cart_item_renderers"/>
     <body>
         <referenceContainer name="content">
-            <block class="Oporteo\Csvorderupload\Block\Index\Index" name="index.index"
-                   template="Oporteo_Csvorderupload::index/index.phtml" ifconfig="oporteo/general/enabled"
-                   cacheable="false"/>
+            <block name="oporteo.orderupload.index" template="Oporteo_OrderUpload::index.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Oporteo\OrderUpload\ViewModel\OrderUpload</argument>
+                </arguments>
+                <block name="oporteo.orderupload.summary" template="Oporteo_OrderUpload::summary.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.text" template="Oporteo_OrderUpload::text.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.template_link" template="Oporteo_OrderUpload::template-link.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.price_list_link" template="Oporteo_OrderUpload::price-list-link.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.login" template="Oporteo_OrderUpload::login.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.upload_area" template="Oporteo_OrderUpload::upload-area.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+                <block name="oporteo.orderupload.modal" template="Oporteo_OrderUpload::modal.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Oporteo\OrderUpload\ViewModel\OrderUpload
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
         </referenceContainer>
     </body>
 </page>

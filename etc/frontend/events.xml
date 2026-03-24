@@ -1,0 +1,16 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_predispatch_orderupload">
+        <observer name="oporteo_orderupload_disable_route"
+                  instance="Oporteo\OrderUpload\Observer\DisableRouteObserver"/>
+    </event>
+
+    <event name="controller_action_predispatch_orderupload_validate">
+        <observer name="oporteo_orderupload_forbid_guest"
+                  instance="Oporteo\OrderUpload\Observer\ForbidGuestsObserver"/>
+    </event>
+    <event name="controller_action_predispatch_orderupload_proceed">
+        <observer name="oporteo_orderupload_forbid_guest"
+                  instance="Oporteo\OrderUpload\Observer\ForbidGuestsObserver"/>
+    </event>
+</config>

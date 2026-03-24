@@ -1,8 +1,5 @@
-<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Oporteo\Csvorderupload\Api\GetStockProductQtysInterface"
-                type="Oporteo\Csvorderupload\Model\GetStockProductQtys"/>
-    <preference for="Oporteo\Csvorderupload\Api\GetStockProductPricesInterface"
-                type="Oporteo\Csvorderupload\Model\GetStockProductPrices"/>
+    <preference for="Oporteo\OrderUpload\Api\StockValidatorInterface"
+                type="Oporteo\OrderUpload\Model\StockValidator"/>
 </config>

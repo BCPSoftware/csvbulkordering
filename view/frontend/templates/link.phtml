@@ -1,10 +1,19 @@
 <?php
-/** @var Magento\Framework\View\Element\Template $block */
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+$isCurrent = $block->getRequest()->getFullActionName() === 'orderupload_index_index';
+
 ?>
 
-<li class="csv-order-upload-link" data-label="Order Upload">
-    <a href="<?= $block->escapeUrl($block->getUrl('orderupload')) ?>"
-       title="<?= $block->escapeHtmlAttr(__('Order upload')) ?>">
-        <?= $block->escapeHtml(__('Order upload')) ?>
+<li class="link orderupload-link<?= $isCurrent ? ' current' : '' ?>">
+    <a href="<?= $escaper->escapeUrl($block->getUrl('orderupload')) ?>"
+       <?= $isCurrent ? 'aria-current="page"' : '' ?>>
+        <?= $escaper->escapeHtml(__('Order Upload')) ?>
     </a>
 </li>

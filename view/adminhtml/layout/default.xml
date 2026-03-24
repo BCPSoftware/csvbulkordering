@@ -1,0 +1,14 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="legal.system">
+<!--            <block class="Oporteo\Core\Block\Adminhtml\System\Version" after="version" name="oporteo-version"-->
+<!--                   as="oporteo-version">-->
+<!--                <arguments>-->
+<!--                    <argument name="packageName" xsi:type="string">oporteo/module-csvorderupload</argument>-->
+<!--                    <argument name="packageLabel" xsi:type="string">CSV Order Upload</argument>-->
+<!--                </arguments>-->
+<!--            </block>-->
+        </referenceContainer>
+    </body>
+</page>

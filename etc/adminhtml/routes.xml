@@ -1,8 +1,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="admin">
-        <route id="sales">
-            <module name="Oporteo_Csvorderupload" before="Magento_Sales"/>
+        <route id="orderupload" frontName="orderupload">
+            <module name="Oporteo_OrderUpload" before="Magento_Backend"/>
         </route>
     </router>
 </config>

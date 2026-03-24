@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ * @var OrderUpload $viewModel
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Oporteo\OrderUpload\ViewModel\OrderUpload;
+
+$viewModel = $block->getData('view_model');
+
+?>
+
+<?php if ($viewModel->isPriceListEnabled()): ?>
+    <p class="order-upload__template">
+        <a href="<?= $escaper->escapeUrl($viewModel->getPriceListUrl()) ?>">
+            <?= $escaper->escapeHtml(__('Click here to get price list.')) ?>
+        </a>
+    </p>
+<?php endif; ?>
